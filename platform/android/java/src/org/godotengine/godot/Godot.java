@@ -99,6 +99,10 @@ import java.util.Locale;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+
 public class Godot extends Activity implements SensorEventListener, IDownloaderClient {
 
 	static final int MAX_SINGLETONS = 64;
@@ -459,6 +463,13 @@ public class Godot extends Activity implements SensorEventListener, IDownloaderC
 
 	@Override
 	protected void onCreate(Bundle icicle) {
+
+        SharedPreferences appCenterPrefs = getSharedPreferences("godot_app_center", Context.MODE_PRIVATE);
+		String api_key = appCenterPrefs.getString("api_key",null);
+		if (api_key != null){
+			Log.d("godot", "AppCenter: start with api_key " + api_key);
+			AppCenter.start(getApplication(), api_key, Analytics.class, Crashes.class);
+		}
 
 		super.onCreate(icicle);
 		Window window = getWindow();
