@@ -225,6 +225,9 @@ public class PaymentsManager {
 			}
 
 			@Override
+			protected void alreadyOwned(final String sku) { godotPaymentV3.callbackAlreadyOwned(sku); }
+
+			@Override
 			protected void error(String message) {
 				godotPaymentV3.callbackFail(message);
 			}

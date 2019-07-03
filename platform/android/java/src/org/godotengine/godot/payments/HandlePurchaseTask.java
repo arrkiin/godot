@@ -50,6 +50,16 @@ import android.util.Log;
 
 abstract public class HandlePurchaseTask {
 
+	public static final int BILLING_RESPONSE_RESULT_OK 					= 0; // Success
+	public static final int BILLING_RESPONSE_RESULT_USER_CANCELED		= 1; // User pressed back or canceled a dialog
+	public static final int BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE	= 2; // Network connection is down
+	public static final int BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE	= 3; // The Google Play Billing AIDL version is not supported for the type requested
+	public static final int BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE	= 4; // Requested product is not available for purchase
+	public static final int BILLING_RESPONSE_RESULT_DEVELOPER_ERROR		= 5; // Invalid arguments provided to the API. This error can also indicate that the application was not correctly signed or properly set up for Google Play Billing, or does not have the necessary permissions in its manifest
+	public static final int BILLING_RESPONSE_RESULT_ERROR				= 6; // Fatal error during the API action
+	public static final int BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED	= 7; // Failure to purchase since item is already owned
+	public static final int BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED		= 8; // "Failure to consume since item is not owned
+
 	private Activity context;
 
 	public HandlePurchaseTask(Activity context) {
@@ -60,7 +70,12 @@ abstract public class HandlePurchaseTask {
 		//Log.d("XXX", "Handling purchase response");
 		if (resultCode == Activity.RESULT_OK) {
 			try {
-				//int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+				int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+				if (responseCode == BILLING_RESPONSE_RESULT_USER_CANCELED) {
+					canceled();
+					return;
+				}
+
 				PaymentsCache pc = new PaymentsCache(context);
 
 				String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
@@ -84,6 +99,12 @@ abstract public class HandlePurchaseTask {
 					error("Untrusted callback");
 					return;
 				}
+
+				if (responseCode == BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
+					alreadyOwned(productId);
+					return;
+				}
+
 				//Log.d("XXX", "Este es el product ID:" + productId);
 				pc.setConsumableValue("ticket_signautre", productId, dataSignature);
 				pc.setConsumableValue("ticket", productId, purchaseData);
@@ -103,4 +124,5 @@ abstract public class HandlePurchaseTask {
 	abstract protected void success(String sku, String signature, String ticket);
 	abstract protected void error(String message);
 	abstract protected void canceled();
+	abstract protected void alreadyOwned(String sku);
 }
