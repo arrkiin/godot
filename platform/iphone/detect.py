@@ -27,6 +27,7 @@ def get_opts():
         BoolVariable('store_kit', 'Support for in-app store', True),
         BoolVariable('icloud', 'Support for iCloud', True),
         BoolVariable('ios_exceptions', 'Enable exceptions', False),
+        BoolVariable('appcenter', 'Enable appcenter', True),
         ('ios_triple', 'Triple for ios toolchain', ''),
     ]
 
@@ -160,6 +161,13 @@ def configure(env):
     if env['store_kit']:
         env.Append(CPPFLAGS=['-DSTOREKIT_ENABLED'])
         env.Append(LINKFLAGS=['-framework', 'StoreKit'])
+    
+    if env['appcenter']:
+        env.AppendUnique(FRAMEWORKPATH='#modules/appcenter/ios/lib')
+        env.Append(CPPFLAGS=['-DAPPCENTER_ENABLED'])
+        env.Append(LINKFLAGS=['-framework', 'AppCenter',])
+        env.Append(LINKFLAGS=['-framework', 'AppCenterAnalytics',])
+        env.Append(LINKFLAGS=['-framework', 'AppCenterCrashes',])
 
     if env['icloud']:
         env.Append(CPPFLAGS=['-DICLOUD_ENABLED'])
