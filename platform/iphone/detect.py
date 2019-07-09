@@ -165,9 +165,9 @@ def configure(env):
     if env['appcenter']:
         env.AppendUnique(FRAMEWORKPATH='#modules/appcenter/ios/lib')
         env.Append(CPPFLAGS=['-DAPPCENTER_ENABLED'])
-        env.Append(LINKFLAGS=['-framework', 'AppCenter',])
-        env.Append(LINKFLAGS=['-framework', 'AppCenterAnalytics',])
-        env.Append(LINKFLAGS=['-framework', 'AppCenterCrashes',])
+        env.AppendUnique(LINKFLAGS=['-framework', 'AppCenter',])
+        env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterAnalytics',])
+        env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterCrashes',])
 
     if env['icloud']:
         env.Append(CPPFLAGS=['-DICLOUD_ENABLED'])
