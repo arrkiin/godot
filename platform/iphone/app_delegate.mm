@@ -610,7 +610,7 @@ static int frame_count = 0;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	CGRect rect = [[UIScreen mainScreen] bounds];
-  NSString *apiKey = [[[NSString alloc] initWithUTF8String:String(GLOBAL_DEF("app_center/api_key_ios")).utf8().get_data()] autorelease];
+  NSString *apiKey = [[[NSString alloc] initWithUTF8String:String(GLOBAL_DEF("app_center/api_key_ios","")).utf8().get_data()] autorelease];
 	[MSAppCenter start:apiKey withServices:@[
 		[MSAnalytics class],
 		[MSCrashes class]
