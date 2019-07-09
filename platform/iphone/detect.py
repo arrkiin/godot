@@ -168,6 +168,7 @@ def configure(env):
         env.AppendUnique(LINKFLAGS=['-framework', 'AppCenter',])
         env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterAnalytics',])
         env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterCrashes',])
+        env.Append(CPPFLAGS=['-fmodules','-fcxx-modules'])
 
     if env['icloud']:
         env.Append(CPPFLAGS=['-DICLOUD_ENABLED'])
