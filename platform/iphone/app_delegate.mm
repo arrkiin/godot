@@ -38,9 +38,9 @@
 
 #import "GameController/GameController.h"
 
-#import "AppCenter"
-#import "AppCenterAnalytics"
-#import "AppCenterCrashes"
+#import <AppCenter/AppCenter.h>
+#import <AppCenterAnalytics/AppCenterAnalytics.h>
+#import <AppCenterCrashes/AppCenterCrashes.h>
 
 #define kFilteringFactor 0.1
 #define kRenderingFrequency 60
