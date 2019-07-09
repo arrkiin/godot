@@ -169,6 +169,7 @@ def configure(env):
         env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterAnalytics',])
         env.AppendUnique(LINKFLAGS=['-framework', 'AppCenterCrashes',])
         env.Append(CPPFLAGS=['-fmodules','-fcxx-modules'])
+        env.Append(CPPFLAGS=['-DMINIUPNPC_SET_SOCKET_TIMEOUT'])
 
     if env['icloud']:
         env.Append(CPPFLAGS=['-DICLOUD_ENABLED'])
