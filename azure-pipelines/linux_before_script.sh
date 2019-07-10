@@ -23,6 +23,7 @@ mkdir -p \
     "$BUILD_ARTIFACTSTAGINGDIRECTORY/templates"
 
 # Prepare submodules for integration
+git submodule update --init --recursive
 for module_dir in $(ls staging)
 do
     cp -rv staging/$module_dir/$module_dir modules
