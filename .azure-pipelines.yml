@@ -44,8 +44,10 @@ jobs:
           if [[ "$PLATFORM" == "simulator" ]]; then
             azure-pipelines/build/simulator.sh
           fi
-      - publish: $(Build.ArtifactStagingDirectory)
-        artifact: godot
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: godot
 
   - job: windows
     pool:
@@ -65,8 +67,10 @@ jobs:
           if [[ "$PLATFORM" == "windows" ]] && [[ "$TARGET" == "editor" ]]; then
             azure-pipelines/build/windows_editor.sh
           fi
-      - publish: $(Build.ArtifactStagingDirectory)
-        artifact: godot
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: godot
 
   - job: linux
     pool:
@@ -114,8 +118,10 @@ jobs:
           if [[ "$PLATFORM" == "linux" ]] && [[ "$TARGET" == "server" ]]; then
             azure-pipelines/build/linux_headless.sh
           fi
-      - publish: $(Build.ArtifactStagingDirectory)
-        artifact: godot
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: godot
 
   - job: deploy
     dependsOn:
@@ -130,13 +136,15 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
-      - task: DownloadPipelineArtifact@2
+      - task: DownloadBuildArtifacts@0
         inputs:
+          downloadType: single
           artifactName: godot
-          targetPath: '$(Pipeline.Workspace)'
+          downloadPath: $(System.ArtifactsDirectory)
       - bash: |
-          cd $(Pipeline.Workspace)/godot
-          mv ./*/* .
+          cd $(System.ArtifactsDirectory)
+          mkdir -p releases
+          mv ./godot/*/* ./releases/
       - task: GitHubRelease@0
         inputs:
           gitHubConnection: arrkiin
@@ -145,5 +153,5 @@ jobs:
           target: '$(Build.SourceVersion)'
           title: 'Godot-3.1.1-$(Build.BuildNumber)'
           releaseTag: $(Build.BuildNumber)
-          assets: $(Pipeline.Workspace)/godot/*
+          assets: $(System.ArtifactsDirectory)/releases/*
           addChangeLog: false
