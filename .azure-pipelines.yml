@@ -1,0 +1,149 @@
+# This build script is licensed under CC0 1.0 Universal:
+# https://creativecommons.org/publicdomain/zero/1.0/
+
+variables:
+  build_name: arrkiin
+  build_threads: "3"
+  scons_flags: '("progress=no" "debug_symbols=no" "-j$BUILD_THREADS")'
+  scons_tmpl_flags: '("disable_3d=yes" "disable_advanced_gui=yes" "module_bmp_enabled=no" "module_csg_enabled=no" "module_dds_enabled=no" "module_enet_enabled=no" "module_etc_enabled=no" "module_hdr_enabled=no" "module_mbedtls_enabled=no" "module_mobile_vr_enabled=no" "module_opus_enabled=no" "module_pvr_enabled=no" "module_recast_enabled=no" "module_squish_enabled=no" "module_tga_enabled=no" "module_thekla_unwrap_enabled=no" "module_theora_enabled=no" "module_tinyexr_enabled=no" "module_vorbis_enabled=no" "module_webm_enabled=no" "optimize=size")'
+
+jobs:
+  - job: macos
+    pool:
+      vmImage: macOS-10.13
+    timeoutInMinutes: 0
+    strategy:
+      matrix:
+        osx_editor:
+          platform: osx
+          target: editor
+        osx_templates:
+          platform: osx
+          target: templates
+        ios_templates:
+          platform: iphone
+          target: templates
+        simulator_templates:
+          platform: simulator
+          target: templates
+    steps:
+      - script: |
+          chmod +x azure-pipelines/*.sh
+          chmod +x azure-pipelines/build/*.sh
+          azure-pipelines/macos_before_script.sh
+
+          if [[ "$PLATFORM" == "osx" ]] && [[ "$TARGET" == "editor" ]]; then
+            azure-pipelines/build/osx_editor.sh
+          fi
+          if [[ "$PLATFORM" == "osx" ]] && [[ "$TARGET" == "templates" ]]; then
+            azure-pipelines/build/osx_templates.sh
+          fi
+          if [[ "$PLATFORM" == "iphone" ]]; then
+            azure-pipelines/build/iphone.sh
+          fi
+          if [[ "$PLATFORM" == "simulator" ]]; then
+            azure-pipelines/build/simulator.sh
+          fi
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: godot
+
+  - job: windows
+    pool:
+      vmImage: 'windows-2019'
+    timeoutInMinutes: 0
+    strategy:
+      matrix:
+        windows_editor:
+          platform: windows
+          target: editor
+    steps:
+      - bash: |
+          chmod +x azure-pipelines/*.sh
+          chmod +x azure-pipelines/build/*.sh
+          azure-pipelines/windows_before_script.sh
+          cd "godot/"
+          if [[ "$PLATFORM" == "windows" ]] && [[ "$TARGET" == "editor" ]]; then
+            azure-pipelines/build/windows_editor.sh
+          fi
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: godot
+
+  - job: linux
+    pool:
+      vmImage: 'ubuntu-16.04'
+    timeoutInMinutes: 0
+    strategy:
+      matrix:
+        android_debug_templates:
+          platform: android
+          target: templates
+          build_target: debug
+        android_release_templates:
+          platform: android
+          target: templates
+          build_target: release
+        linux_editor:
+          platform: linux
+          target: editor
+        linux_server:
+          platform: linux
+          target: server
+        html_debug_templates:
+          platform: linux
+          target: html
+          build_target: debug
+        html_release_templates:
+          platform: linux
+          target: html
+          build_target: release
+    steps:
+      - bash: |
+          chmod +x azure-pipelines/*.sh
+          chmod +x azure-pipelines/build/*.sh
+          azure-pipelines/linux_before_script.sh
+          cd "godot/"
+          if [[ "$PLATFORM" == "android" ]]; then
+            azure-pipelines/build/android.sh
+          fi
+          if [[ "$PLATFORM" == "linux" ]] && [[ "$TARGET" == "editor" ]]; then
+            azure-pipelines/build/linux_editor.sh
+          fi
+          if [[ "$PLATFORM" == "linux" ]] && [[ "$TARGET" == "html" ]]; then
+            azure-pipelines/build/html5.sh
+          fi
+          if [[ "$PLATFORM" == "linux" ]] && [[ "$TARGET" == "server" ]]; then
+            azure-pipelines/build/linux_headless.sh
+          fi
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: godot
+
+  - job: deploy
+    dependsOn:
+    - macos
+    - windows
+    - linux
+    condition: >-
+      and(
+        eq(variables['Build.SourceBranchName'], 'master'),
+        ne(variables['Build.Reason'], 'PullRequest')
+      )
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: godot
+          targetPath: '$(Pipeline.Workspace)'
+      - bash: |
+          cd $(Pipeline.Workspace)/godot
+          mv ./*/* .
+      - task: GitHubRelease@0
+        inputs:
+          gitHubConnection: arrkiin
+          repositoryName: '$(Build.Repository.Name)' 
+          action: 'create'
+          target: '$(Build.SourceVersion)'
+          title: 'Godot-3.1.1-$(Build.BuildNumber)'
+          releaseTag: $(Build.BuildNumber)
+          assets: $(Pipeline.Workspace)/godot/*
+          addChangeLog: false

@@ -1,0 +1,12 @@
+[submodule "staging/appcenter"]
+	path = staging/appcenter
+	url = https://github.com/arrkiin/GodotAppCenter
+[submodule "staging/share"]
+	path = staging/share
+	url = https://github.com/arrkiin/Godot-Share
+[submodule "staging/vibration"]
+	path = staging/vibration
+	url = https://github.com/arrkiin/Godot-Mobile-Vibration
+[submodule "staging/admob"]
+	path = staging/admob
+	url = https://github.com/arrkiin/godot-admob
