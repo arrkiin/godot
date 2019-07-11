@@ -130,7 +130,7 @@ jobs:
     - linux
     condition: >-
       and(
-        eq(variables['Build.SourceBranchName'], 'master'),
+        eq(variables['Build.SourceBranchName'], 'appcenter'),
         ne(variables['Build.Reason'], 'PullRequest')
       )
     pool:
