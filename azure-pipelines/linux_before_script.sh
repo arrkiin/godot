@@ -20,7 +20,8 @@ sudo apt-get install -qqq git cmake zip unzip build-essential scons pkg-config \
 
 mkdir -p \
     "$BUILD_ARTIFACTSTAGINGDIRECTORY/editor" \
-    "$BUILD_ARTIFACTSTAGINGDIRECTORY/templates"
+    "$BUILD_ARTIFACTSTAGINGDIRECTORY/templates" \
+    "$BUILD_ARTIFACTSTAGINGDIRECTORY/server"
 
 # Prepare submodules for integration
 git submodule update --init --recursive
