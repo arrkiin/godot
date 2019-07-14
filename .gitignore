@@ -325,3 +325,8 @@ compile_commands.json
 
 # Allow build directory under azure-pipelines
 !azure-pipelines/build
+
+modules/admob
+modules/appcenter
+modules/share
+modules/vibration
