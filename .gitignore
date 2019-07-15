@@ -327,6 +327,5 @@ compile_commands.json
 !azure-pipelines/build
 
 modules/admob
-modules/appcenter
 modules/share
 modules/vibration

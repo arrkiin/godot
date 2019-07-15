@@ -1,6 +1,3 @@
-[submodule "staging/appcenter"]
-	path = staging/appcenter
-	url = https://github.com/arrkiin/GodotAppCenter
 [submodule "staging/share"]
 	path = staging/share
 	url = https://github.com/arrkiin/Godot-Share

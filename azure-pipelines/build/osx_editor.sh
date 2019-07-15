@@ -7,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Build macOS editor
-scons platform=osx tools=yes target=release_debug appcenter=no \
+scons platform=osx tools=yes target=release_debug \
       "${SCONS_FLAGS[@]}"
 
 # Create macOS editor DMG image

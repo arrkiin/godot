@@ -38,15 +38,4 @@ if [[ "$PLATFORM" == "iphone" ]] || [[ "$PLATFORM" == "simulator" ]]; then
     done
     cd ..
 
-    # Provide AppCenter iOS sdk
-    cd tmp
-    curl -LO https://github.com/microsoft/appcenter-sdk-apple/releases/download/2.1.0/AppCenter-SDK-Apple-2.1.0.zip
-    unzip AppCenter-SDK-Apple-2.1.0.zip
-    for sdk_dir in AppCenter-SDK-Apple/iOS ; do
-        for lib_dir in ./$sdk_dir/*.framework; do
-            cp -rv $lib_dir ../modules/appcenter/ios/lib
-        done
-    done
-    cd ..
-
 fi

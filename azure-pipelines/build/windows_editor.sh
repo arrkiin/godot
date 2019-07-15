@@ -7,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Build Windows editor
-scons platform=windows tools=yes target=release_debug appcenter=no \
+scons platform=windows tools=yes target=release_debug \
       "${SCONS_FLAGS[@]}"
 
 cd "bin/"

@@ -38,10 +38,6 @@
 
 #import "GameController/GameController.h"
 
-@import AppCenter;
-@import AppCenterAnalytics;
-@import AppCenterCrashes;
-
 #define kFilteringFactor 0.1
 #define kRenderingFrequency 60
 #define kAccelerometerFrequency 100.0 // Hz
@@ -610,11 +606,6 @@ static int frame_count = 0;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	CGRect rect = [[UIScreen mainScreen] bounds];
-  NSString *apiKey = [[[NSString alloc] initWithUTF8String:String(GLOBAL_DEF("app_center/api_key_ios","")).utf8().get_data()] autorelease];
-	[MSAppCenter start:apiKey withServices:@[
-		[MSAnalytics class],
-		[MSCrashes class]
-	]];
 
 	is_focus_out = false;
 
