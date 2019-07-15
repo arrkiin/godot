@@ -50,10 +50,3 @@ if [[ "$PLATFORM" == "iphone" ]] || [[ "$PLATFORM" == "simulator" ]]; then
     cd ..
 
 fi
-
-# Print information about the commit to build
-printf -- "-%.0s" {0..72}
-echo ""
-git -C "godot/" log --max-count 1
-printf -- "-%.0s" {0..72}
-echo ""

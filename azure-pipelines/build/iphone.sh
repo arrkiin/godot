@@ -16,11 +16,7 @@ for target in "release_debug" "release"; do
 done
 
 # Create iOS export templates ZIP archive
-mv "bin/libgodot.iphone.opt.debug.arm64.a" "libgodot.iphone.debug.fat.a"
-mv "bin/libgodot.iphone.opt.arm64.a" "libgodot.iphone.release.fat.a"
-touch "data.pck"
-zip -r9 \
-    "$BUILD_ARTIFACTSTAGINGDIRECTORY/templates/iphone.zip" \
-    "libgodot.iphone.debug.fat.a" \
-    "libgodot.iphone.release.fat.a" \
-    "data.pck"
+mv "bin/libgodot.iphone.opt.debug.arm64.a" "misc/dist/ios_xcode/libgodot.iphone.debug.fat.a"
+mv "bin/libgodot.iphone.opt.arm64.a" "misc/dist/ios_xcode/libgodot.iphone.release.fat.a"
+cd "misc/dist/ios_xcode"
+zip -r9 "$BUILD_ARTIFACTSTAGINGDIRECTORY/templates/iphone.zip" *
